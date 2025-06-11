@@ -20,6 +20,8 @@ ChartJS.register(
 );
 
 const TotalProfitCard = () => {
+  if (typeof window === 'undefined') return null;
+
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Placeholder labels
     datasets: [

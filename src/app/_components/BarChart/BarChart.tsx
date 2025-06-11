@@ -9,6 +9,7 @@ interface BarChartProps {
 }
 
 const BarChart: React.FC<BarChartProps> = ({ data, options }) => {
+  if (typeof window === 'undefined') return null;
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart<'bar'> | null>(null);
 
