@@ -1,9 +1,15 @@
 'use client';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { ChartOptions, ChartData } from 'chart.js/auto';
-import BarChart from '../_components/BarChart/BarChart';
+const BarChart = dynamic(() => import('../_components/BarChart/BarChart'), {
+  ssr: false,
+});
+const TotalProfitCard = dynamic(
+  () => import('../_components/TotalProfitCard/TotalProfitCard'),
+  { ssr: false }
+);
 import CongratulationsCard from '../_components/CongratulationsCard/CongratulationsCard';
-import TotalProfitCard from '../_components/TotalProfitCard/TotalProfitCard';
 import SalesByCountry from '../_components/SalesByCountry/SalesByCountry';
 import DepositCard from '../_components/DepositCard/DepositCard';
 import WithdrawCard from '../_components/WithdrawCard/WithdrawCard';
@@ -63,8 +69,8 @@ const page = () => {
         </div>
         {/* Add your other two cards here, e.g. <NewSalesCard /> <TotalClientCard /> */}
         <SalesByCountry />
-        <DepositCard/>
-        <WithdrawCard/>
+        <DepositCard />
+        <WithdrawCard />
       </div>
     </div>
   );
