@@ -11,7 +11,8 @@ import {
   Tooltip,
   Legend,
   ChartOptions,
-  ChartData
+  ChartData,
+  Filler,
 } from 'chart.js';
 
 // Register Chart.js components
@@ -21,8 +22,33 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
+
+// Canvas polyfill for deployment environments
+if (typeof window !== 'undefined') {
+  const originalGetContext = HTMLCanvasElement.prototype.getContext;
+  const customGetContext = function (
+    this: HTMLCanvasElement,
+    contextId: any,
+    options?: any
+  ) {
+    const context = originalGetContext.call(this, contextId, options);
+    if (context && contextId === '2d') {
+      const ctx = context as any;
+      if (!ctx.cp1x) {
+        Object.defineProperty(ctx, 'cp1x', { value: 0, writable: true });
+        Object.defineProperty(ctx, 'cp1y', { value: 0, writable: true });
+        Object.defineProperty(ctx, 'cp2x', { value: 0, writable: true });
+        Object.defineProperty(ctx, 'cp2y', { value: 0, writable: true });
+      }
+    }
+    return context;
+  };
+  HTMLCanvasElement.prototype.getContext =
+    customGetContext as typeof HTMLCanvasElement.prototype.getContext;
+}
 
 interface BarChartProps {
   data?: ChartData<'bar'>;
@@ -38,7 +64,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, options }) => {
 
   if (!isMounted) {
     return (
-      <div className="w-full h-48 md:h-56 lg:h-64 flex items-center justify-center">
+      <div className='w-full h-48 md:h-56 lg:h-64 flex items-center justify-center'>
         <div>Loading chart...</div>
       </div>
     );
@@ -84,17 +110,14 @@ const BarChart: React.FC<BarChartProps> = ({ data, options }) => {
 
   return (
     <div
-      className="w-full h-48 md:h-56 lg:h-64"
+      className='w-full h-48 md:h-56 lg:h-64'
       style={{
         position: 'relative',
         maxWidth: '350px',
         margin: '0 auto',
       }}
     >
-      <Bar 
-        data={data || defaultData} 
-        options={options || defaultOptions} 
-      />
+      <Bar data={data || defaultData} options={options || defaultOptions} />
     </div>
   );
 };
