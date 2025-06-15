@@ -15,7 +15,6 @@ import {
   Filler,
 } from 'chart.js';
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,30 +24,6 @@ ChartJS.register(
   Legend,
   Filler
 );
-
-// Canvas polyfill for deployment environments
-if (typeof window !== 'undefined') {
-  const originalGetContext = HTMLCanvasElement.prototype.getContext;
-  const customGetContext = function (
-    this: HTMLCanvasElement,
-    contextId: any,
-    options?: any
-  ) {
-    const context = originalGetContext.call(this, contextId, options);
-    if (context && contextId === '2d') {
-      const ctx = context as any;
-      if (!ctx.cp1x) {
-        Object.defineProperty(ctx, 'cp1x', { value: 0, writable: true });
-        Object.defineProperty(ctx, 'cp1y', { value: 0, writable: true });
-        Object.defineProperty(ctx, 'cp2x', { value: 0, writable: true });
-        Object.defineProperty(ctx, 'cp2y', { value: 0, writable: true });
-      }
-    }
-    return context;
-  };
-  HTMLCanvasElement.prototype.getContext =
-    customGetContext as typeof HTMLCanvasElement.prototype.getContext;
-}
 
 interface BarChartProps {
   data?: ChartData<'bar'>;
