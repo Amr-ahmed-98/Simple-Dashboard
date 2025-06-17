@@ -1,15 +1,14 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  webpack: (config, { isServer }: { isServer: boolean }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        canvas: false,
-      };
-    }
+  transpilePackages: ['chart.js', 'react-chartjs-2'],
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'chart.js/auto': 'chart.js/dist/chart.js'
+    };
     return config;
-  },
-};
+  }
+}
 
 export default nextConfig;
