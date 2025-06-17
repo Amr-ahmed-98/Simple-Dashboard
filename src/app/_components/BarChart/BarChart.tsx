@@ -15,8 +15,8 @@ import {
   type ChartOptions,
 } from 'chart.js';
 
-// Explicitly register all required components
-const registerChartJS = () => {
+// Register components once
+if (typeof window !== 'undefined') {
   ChartJS.register(
     BarController,
     BarElement,
@@ -27,7 +27,7 @@ const registerChartJS = () => {
     Legend,
     Filler
   );
-};
+}
 
 interface BarChartProps {
   data?: ChartData<'bar'>;
@@ -50,10 +50,16 @@ const defaultData: ChartData<'bar'> = {
 
 const defaultOptions: ChartOptions<'bar'> = {
   responsive: true,
-  animation: {
-    duration: 0 // Disable animations initially to prevent cp1x error
+  interaction: {  // ← This is crucial for hover
+    mode: 'index',
+    intersect: false,
   },
   plugins: {
+    tooltip: {    // ← This enables tooltips
+      enabled: true,
+      mode: 'index',
+      intersect: false,
+    },
     legend: {
       display: false,
     },
@@ -77,7 +83,6 @@ const BarChart = ({ data = defaultData, options = defaultOptions }: BarChartProp
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    registerChartJS();
     setIsInitialized(true);
   }, []);
 
@@ -92,6 +97,7 @@ const BarChart = ({ data = defaultData, options = defaultOptions }: BarChartProp
         options={{
           ...defaultOptions,
           ...options,
+          // Merge animation settings if provided
           animation: options?.animation ? {
             ...defaultOptions.animation,
             ...options.animation
