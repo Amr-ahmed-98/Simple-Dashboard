@@ -1,44 +1,23 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { Chart as ChartJS, registerables, TooltipItem } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  LineController,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  type ChartData,
-  type ChartOptions,
-  type TooltipItem
-} from 'chart.js';
 
-// Register components once
-const registerChartJS = () => {
-  ChartJS.register(
-    LineController,
-    LineElement,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    Tooltip
-  );
-};
+// Register all ChartJS components at once
+ChartJS.register(...registerables);
 
 interface TotalProfitCardProps {
   profitAmount?: string;
 }
 
 const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
-    registerChartJS();
-    setIsInitialized(true);
+    setIsBrowser(true);
   }, []);
 
-  const data: ChartData<'line'> = {
+  const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
       {
@@ -56,17 +35,15 @@ const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
     ],
   };
 
-  const options: ChartOptions<'line'> = {
+  const options = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
-      mode: 'index',
+      mode: 'index' as const,
       intersect: false,
     },
     plugins: {
-      legend: { 
-        display: false 
-      },
+      legend: { display: false },
       tooltip: {
         enabled: true,
         backgroundColor: '#1f2937',
@@ -81,25 +58,15 @@ const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
       },
     },
     scales: {
-      x: { 
-        display: false,
-        grid: {
-          display: false,
-        }
-      },
-      y: { 
-        display: false,
-        grid: {
-          display: false,
-        }
-      },
+      x: { display: false },
+      y: { display: false },
     },
     animation: {
-      duration: 0 // Disable initial animation to prevent potential errors
-    }
+      duration: 0, // Disable animations to prevent cp1x error
+    },
   };
 
-  if (!isInitialized) {
+  if (!isBrowser) {
     return (
       <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center'>
         <div className='text-2xl font-semibold text-gray-800 dark:text-white'>
@@ -108,7 +75,9 @@ const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
         <div className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
           Total Profit
         </div>
-        <div className='h-24 flex items-center justify-center'>Loading chart...</div>
+        <div className='h-24 flex items-center justify-center'>
+          Loading chart...
+        </div>
       </div>
     );
   }
@@ -122,11 +91,7 @@ const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
         Total Profit
       </div>
       <div className='h-24'>
-        <Line 
-          data={data} 
-          options={options} 
-          fallbackContent={<div>Loading chart...</div>}
-        />
+        <Line data={data} options={options} />
       </div>
     </div>
   );
