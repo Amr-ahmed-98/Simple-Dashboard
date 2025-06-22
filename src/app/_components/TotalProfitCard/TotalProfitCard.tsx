@@ -54,6 +54,9 @@ const TotalProfitCard = () => {
 
   const options = {
     responsive: true,
+    animation: {
+      duration: 0 
+    },
     maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
