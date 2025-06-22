@@ -11,31 +11,41 @@ import {
   TooltipItem,
 } from 'chart.js';
 
-// Register Chart.js components
-const registerChartJS = () => {
-  ChartJS.register(
+// Register Chart.js components once
+ChartJS.register(
   LineElement,
   CategoryScale,
   LinearScale,
   PointElement,
   Tooltip
-);  
-}
+);
 
 const TotalProfitCard = () => {
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    registerChartJS();
-    setIsInitialized(true);
+    setIsMounted(true);
   }, []);
 
-  if (!isInitialized) {
-    return <div className="h-64 flex items-center justify-center">Loading chart...</div>;
+  // Don't render until component is mounted on client
+  if (!isMounted) {
+    return (
+      <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center'>
+        <div className='text-2xl font-semibold text-gray-800 dark:text-white'>
+          $86.4k
+        </div>
+        <div className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
+          Total Profit
+        </div>
+        <div className='h-24 flex items-center justify-center bg-gray-50 rounded'>
+          <div className='text-gray-500 text-sm'>Loading chart...</div>
+        </div>
+      </div>
+    );
   }
 
   const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Placeholder labels
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
       {
         label: 'Profit',
@@ -54,21 +64,27 @@ const TotalProfitCard = () => {
 
   const options = {
     responsive: true,
-    animation: {
-      duration: 0 
-    },
     maintainAspectRatio: false,
+    // Disable animations to prevent cp1x errors
+    animation: { duration: 0 },
+    // Alternative: Use simple animation config
+    // animation: {
+    //   duration: 0,
+    // },
+    interaction: {
+      intersect: false,
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
         enabled: true,
-        backgroundColor: '#1f2937', // dark gray
+        backgroundColor: '#1f2937',
         titleColor: '#ffffff',
         bodyColor: '#a78bfa',
         cornerRadius: 8,
         padding: 10,
         callbacks: {
-          title: () => '', // hide label
+          title: () => '',
           label: (context: TooltipItem<'line'>) => `$${context.parsed.y}k`,
         },
       },
@@ -80,7 +96,7 @@ const TotalProfitCard = () => {
   };
 
   return (
-    <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center '>
+    <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center'>
       <div className='text-2xl font-semibold text-gray-800 dark:text-white'>
         $86.4k
       </div>

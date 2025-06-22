@@ -10,24 +10,20 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler,
   type ChartData,
   type ChartOptions,
 } from 'chart.js';
 
-// Explicitly register all required components
-const registerChartJS = () => {
-  ChartJS.register(
-    BarController,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    Title,
-    Tooltip,
-    Legend,
-    Filler
-  );
-};
+// Register Chart.js components once
+ChartJS.register(
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface BarChartProps {
   data?: ChartData<'bar'>;
@@ -50,8 +46,15 @@ const defaultData: ChartData<'bar'> = {
 
 const defaultOptions: ChartOptions<'bar'> = {
   responsive: true,
-  animation: {
-    duration: 0 // Disable animations initially to prevent cp1x error
+  maintainAspectRatio: false,
+  // Disable animations to prevent cp1x errors
+  animation: false,
+  // Alternative: Use simple animation config
+  // animation: {
+  //   duration: 0,
+  // },
+  interaction: {
+    intersect: false,
   },
   plugins: {
     legend: {
@@ -74,29 +77,33 @@ const defaultOptions: ChartOptions<'bar'> = {
 };
 
 const BarChart = ({ data = defaultData, options = defaultOptions }: BarChartProps) => {
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    registerChartJS();
-    setIsInitialized(true);
+    setIsMounted(true);
   }, []);
 
-  if (!isInitialized) {
-    return <div className="h-64 flex items-center justify-center">Loading chart...</div>;
+  // Don't render until component is mounted on client
+  if (!isMounted) {
+    return (
+      <div className="w-full h-64 flex items-center justify-center bg-gray-50 rounded">
+        <div className="text-gray-500">Loading chart...</div>
+      </div>
+    );
   }
+
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+    // Ensure animation is always disabled or properly configured
+    animation: options?.animation !== undefined ? options.animation : false,
+  };
 
   return (
     <div className="w-full h-64 relative">
       <Bar 
         data={data}
-        options={{
-          ...defaultOptions,
-          ...options,
-          animation: options?.animation ? {
-            ...defaultOptions.animation,
-            ...options.animation
-          } : defaultOptions.animation
-        }}
+        options={mergedOptions}
       />
     </div>
   );

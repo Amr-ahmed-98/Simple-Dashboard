@@ -31,10 +31,8 @@ const page = () => {
   });
 
   const chartOptions: ChartOptions<'bar'> = {
-    animation: {
-      duration: 0 
-    },
     responsive: true,
+    animation: false, // Add this to prevent cp1x errors
     plugins: {
       legend: {
         display: false,
