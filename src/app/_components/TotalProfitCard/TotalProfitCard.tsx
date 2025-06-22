@@ -1,24 +1,41 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Chart as ChartJS, registerables, TooltipItem } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  TooltipItem,
+} from 'chart.js';
 
-// Register all ChartJS components at once
-ChartJS.register(...registerables);
-
-interface TotalProfitCardProps {
-  profitAmount?: string;
+// Register Chart.js components
+const registerChartJS = () => {
+  ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip
+);  
 }
 
-const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
-  const [isBrowser, setIsBrowser] = useState(false);
+const TotalProfitCard = () => {
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    setIsBrowser(true);
+    registerChartJS();
+    setIsInitialized(true);
   }, []);
 
+  if (!isInitialized) {
+    return <div className="h-64 flex items-center justify-center">Loading chart...</div>;
+  }
+
   const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Placeholder labels
     datasets: [
       {
         label: 'Profit',
@@ -38,21 +55,17 @@ const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    interaction: {
-      mode: 'index' as const,
-      intersect: false,
-    },
     plugins: {
       legend: { display: false },
       tooltip: {
         enabled: true,
-        backgroundColor: '#1f2937',
+        backgroundColor: '#1f2937', // dark gray
         titleColor: '#ffffff',
         bodyColor: '#a78bfa',
         cornerRadius: 8,
         padding: 10,
         callbacks: {
-          title: () => '',
+          title: () => '', // hide label
           label: (context: TooltipItem<'line'>) => `$${context.parsed.y}k`,
         },
       },
@@ -61,31 +74,12 @@ const TotalProfitCard = ({ profitAmount = '$86.4k' }: TotalProfitCardProps) => {
       x: { display: false },
       y: { display: false },
     },
-    animation: {
-      duration: 0, // Disable animations to prevent cp1x error
-    },
   };
 
-  if (!isBrowser) {
-    return (
-      <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center'>
-        <div className='text-2xl font-semibold text-gray-800 dark:text-white'>
-          {profitAmount}
-        </div>
-        <div className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
-          Total Profit
-        </div>
-        <div className='h-24 flex items-center justify-center'>
-          Loading chart...
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center'>
+    <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center '>
       <div className='text-2xl font-semibold text-gray-800 dark:text-white'>
-        {profitAmount}
+        $86.4k
       </div>
       <div className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
         Total Profit
