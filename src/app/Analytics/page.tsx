@@ -31,6 +31,9 @@ const page = () => {
   });
 
   const chartOptions: ChartOptions<'bar'> = {
+    animation: {
+      duration: 0 
+    },
     responsive: true,
     plugins: {
       legend: {
