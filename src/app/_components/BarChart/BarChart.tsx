@@ -9,23 +9,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartData,
-  ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-
-// Register components only on client side
-if (typeof window !== 'undefined') {
-  ChartJS.register(
-    BarController,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    Title,
-    Tooltip,
-    Legend
-  );
-}
+import { ChartData, ChartOptions } from 'chart.js/auto';
 
 interface BarChartProps {
   data: ChartData<'bar'>;
@@ -33,10 +19,33 @@ interface BarChartProps {
 }
 
 const BarChart = ({ data, options = {} }: BarChartProps) => {
-  const [isBrowser, setIsBrowser] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    setIsBrowser(true);
+    // Register ChartJS components only on client side
+    ChartJS.register(
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Title,
+      Tooltip,
+      Legend
+    );
+    setIsInitialized(true);
+
+    // Cleanup function to avoid memory leaks
+    return () => {
+      ChartJS.unregister(
+        BarController,
+        BarElement,
+        CategoryScale,
+        LinearScale,
+        Title,
+        Tooltip,
+        Legend
+      );
+    };
   }, []);
 
   // Complete animation disabling configuration
@@ -44,22 +53,18 @@ const BarChart = ({ data, options = {} }: BarChartProps) => {
     ...options,
     responsive: true,
     maintainAspectRatio: false,
-    animation: {
-      duration: 0, // General animation time
-    },
+    animation: { duration: 0 }, // Disable all animations
     transitions: {
       active: {
-        animation: { duration: 0 }, // Duration when active
+        animation: { duration: 0 },
       },
     },
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
     },
   };
 
-  if (!isBrowser) {
+  if (!isInitialized) {
     return (
       <div className='w-full h-64 flex items-center justify-center bg-gray-50 rounded'>
         <div className='text-gray-500'>Loading chart...</div>

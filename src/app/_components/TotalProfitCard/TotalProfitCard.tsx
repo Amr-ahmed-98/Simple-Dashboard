@@ -7,42 +7,58 @@ import {
   LinearScale,
   PointElement,
   Tooltip,
-  ChartData,
-  ChartOptions,
-  TooltipItem,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-
-// Register components only on client side
-if (typeof window !== 'undefined') {
-  ChartJS.register(
-    LineElement,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    Tooltip
-  );
-}
+import { ChartData, ChartOptions, TooltipItem } from 'chart.js/auto';
 
 const TotalProfitCard = () => {
-  const [isBrowser, setIsBrowser] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    setIsBrowser(true);
+    // Register ChartJS components only on client side
+    ChartJS.register(
+      LineElement,
+      CategoryScale,
+      LinearScale,
+      PointElement,
+      Tooltip
+    );
+    setIsInitialized(true);
+
+    return () => {
+      ChartJS.unregister(
+        LineElement,
+        CategoryScale,
+        LinearScale,
+        PointElement,
+        Tooltip
+      );
+    };
   }, []);
 
-  // Complete animation disabling configuration
+  // Chart data and options
+  const data: ChartData<'line'> = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: 'Profit',
+        data: [20, 35, 25, 40, 30, 50],
+        borderColor: '#a78bfa',
+        backgroundColor: '#a78bfa',
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: '#a78bfa',
+        pointHoverBackgroundColor: '#c084fc',
+        fill: false,
+      },
+    ],
+  };
+
   const chartOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
-    animation: {
-      duration: 0,
-    },
-    transitions: {
-      active: {
-        animation: { duration: 0 },
-      },
-    },
+    animation: { duration: 0 }, // Disable all animations
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -64,25 +80,7 @@ const TotalProfitCard = () => {
     },
   };
 
-  const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Profit',
-        data: [20, 35, 25, 40, 30, 50],
-        borderColor: '#a78bfa',
-        backgroundColor: '#a78bfa',
-        tension: 0.4,
-        pointRadius: 5,
-        pointHoverRadius: 7,
-        pointBackgroundColor: '#a78bfa',
-        pointHoverBackgroundColor: '#c084fc',
-        fill: false,
-      },
-    ],
-  };
-
-  if (!isBrowser) {
+  if (!isInitialized) {
     return (
       <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center'>
         <div className='text-2xl font-semibold text-gray-800 dark:text-white'>
