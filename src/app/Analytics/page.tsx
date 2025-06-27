@@ -1,20 +1,45 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { ChartOptions, ChartData } from 'chart.js/auto';
+import { ChartData, ChartOptions } from 'chart.js/auto';
+
+// Dynamic imports with SSR disabled
 const BarChart = dynamic(() => import('../_components/BarChart/BarChart'), {
   ssr: false,
+  loading: () => (
+    <div className='w-full h-64 flex items-center justify-center bg-gray-50 rounded'>
+      <div className='text-gray-500'>Loading chart...</div>
+    </div>
+  ),
 });
+
 const TotalProfitCard = dynamic(
   () => import('../_components/TotalProfitCard/TotalProfitCard'),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className='bg-white dark:bg-gray-800 shadow-md rounded-xl p-4 w-64 text-center'>
+        <div className='text-2xl font-semibold text-gray-800 dark:text-white'>
+          $86.4k
+        </div>
+        <div className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
+          Total Profit
+        </div>
+        <div className='h-24 flex items-center justify-center bg-gray-50 rounded'>
+          <div className='text-gray-500 text-sm'>Loading chart...</div>
+        </div>
+      </div>
+    ),
+  }
 );
+
+// Import other components normally
 import CongratulationsCard from '../_components/CongratulationsCard/CongratulationsCard';
 import SalesByCountry from '../_components/SalesByCountry/SalesByCountry';
 import DepositCard from '../_components/DepositCard/DepositCard';
 import WithdrawCard from '../_components/WithdrawCard/WithdrawCard';
 
-const page = () => {
+const Page = () => {
   const [chartData] = useState<ChartData<'bar'>>({
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
@@ -30,9 +55,17 @@ const page = () => {
     ],
   });
 
+  // Chart options with all animations disabled
   const chartOptions: ChartOptions<'bar'> = {
     responsive: true,
-    animation: false, // Add this to prevent cp1x errors
+    animation: {
+      duration: 0,
+    },
+    transitions: {
+      active: {
+        animation: { duration: 0 },
+      },
+    },
     plugins: {
       legend: {
         display: false,
@@ -68,7 +101,6 @@ const page = () => {
         <div className='bg-gray-100 dark:bg-gray-900 flex items-center justify-center rounded-xl'>
           <TotalProfitCard />
         </div>
-        {/* Add your other two cards here, e.g. <NewSalesCard /> <TotalClientCard /> */}
         <SalesByCountry />
         <DepositCard />
         <WithdrawCard />
@@ -77,4 +109,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -9,11 +9,12 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartData,
+  ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { ChartData, ChartOptions } from 'chart.js/auto';
 
-// Only register on client side
+// Register components only on client side
 if (typeof window !== 'undefined') {
   ChartJS.register(
     BarController,
@@ -28,15 +29,35 @@ if (typeof window !== 'undefined') {
 
 interface BarChartProps {
   data: ChartData<'bar'>;
-  options: ChartOptions<'bar'>;
+  options?: ChartOptions<'bar'>;
 }
 
-const BarChart = ({ data, options }: BarChartProps) => {
+const BarChart = ({ data, options = {} }: BarChartProps) => {
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
     setIsBrowser(true);
   }, []);
+
+  // Complete animation disabling configuration
+  const chartOptions: ChartOptions<'bar'> = {
+    ...options,
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 0, // General animation time
+    },
+    transitions: {
+      active: {
+        animation: { duration: 0 }, // Duration when active
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
 
   if (!isBrowser) {
     return (
@@ -48,21 +69,7 @@ const BarChart = ({ data, options }: BarChartProps) => {
 
   return (
     <div className='w-full h-64 relative'>
-      <Bar
-        data={data}
-        options={{
-          ...options,
-          animation: false, // Disable animations completely
-          responsive: true,
-          maintainAspectRatio: false,
-          // Add these to prevent animation-related errors
-          transitions: {
-            active: {
-              animation: { duration: 0 },
-            },
-          },
-        }}
-      />
+      <Bar data={data} options={chartOptions} />
     </div>
   );
 };
