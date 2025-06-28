@@ -1,12 +1,7 @@
-// src/components/TotalProfitCard.tsx
-'use client';
-
-import { Line } from 'react-chartjs-2';
-import type { ChartData, ChartOptions, TooltipItem } from 'chart.js';
-import '../../../lib/chart';
+import { ChartData, ChartOptions, TooltipItem } from "chart.js";
+import { Line } from "react-chartjs-2";
 
 export default function TotalProfitCard() {
-  // 1) data
   const data: ChartData<'line'> = {
     labels: ['Jan','Feb','Mar','Apr','May','Jun'],
     datasets: [{
@@ -14,7 +9,6 @@ export default function TotalProfitCard() {
       data: [20, 35, 25, 40, 30, 50],
       borderColor: '#a78bfa',
       backgroundColor: '#a78bfa',
-      tension: 0.4,
       pointRadius: 5,
       pointHoverRadius: 7,
       pointBackgroundColor: '#a78bfa',
@@ -23,7 +17,6 @@ export default function TotalProfitCard() {
     }],
   };
 
-  // 2) options
   const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
