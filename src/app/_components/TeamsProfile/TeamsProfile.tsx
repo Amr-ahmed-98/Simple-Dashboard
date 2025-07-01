@@ -1,4 +1,6 @@
+'use client';
 import Image from 'next/image';
+import { useTheme } from '../../../context/ThemeContext';
 
 const teams = [
   {
@@ -10,7 +12,7 @@ const teams = [
   {
     name: 'Testing Team',
     members: 122,
-    icon: '/images/react-testing.png', 
+    icon: '/images/react-testing.png',
     badge: { label: 'Testing', color: 'bg-purple-100 text-purple-500' },
   },
   {
@@ -28,9 +30,14 @@ const teams = [
 ];
 
 const TeamsProfile = () => {
+  const { colors } = useTheme();
   return (
-    <div className='max-w-md bg-white shadow-2xl rounded-2xl p-6 text-left w-full md:w-96'>
-      <h2 className='text-gray-500 font-bold mb-4 text-2xl'>Teams</h2>
+    <div
+      className={`max-w-md ${colors.card} shadow-2xl rounded-2xl p-6 text-left w-full md:w-96`}
+    >
+      <h2 className={`${colors.textTertiary} font-bold mb-4 text-2xl`}>
+        Teams
+      </h2>
       <div className='space-y-6'>
         {teams.map((team) => (
           <div key={team.name} className='flex items-center justify-between'>
@@ -43,8 +50,10 @@ const TeamsProfile = () => {
                 className='rounded-full'
               />
               <div>
-                <div className='font-semibold text-gray-800'>{team.name}</div>
-                <div className='text-gray-500 text-sm'>
+                <div className={`font-semibold ${colors.textSecondary}`}>
+                  {team.name}
+                </div>
+                <div className={`${colors.textTertiary} text-sm`}>
                   {team.members} Members
                 </div>
               </div>

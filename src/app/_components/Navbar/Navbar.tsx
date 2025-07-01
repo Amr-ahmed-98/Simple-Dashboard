@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import {
   IoPerson,
   IoSunnyOutline,
-  IoClose
+  IoClose,
+  IoMoonOutline,
 } from 'react-icons/io5';
 import { CiSettings } from 'react-icons/ci';
 import {
@@ -13,11 +14,13 @@ import {
   BsInfoCircle,
 } from 'react-icons/bs';
 import Link from 'next/link';
+import { useTheme } from '../../../context/ThemeContext';
 
 const Navbar = () => {
   const [isClient, setIsClient] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme, colors, isDark } = useTheme();
 
   // Sample notifications data
   const notifications = [
@@ -96,7 +99,9 @@ const Navbar = () => {
 
   if (!isClient) {
     return (
-      <div className='flex justify-between items-center p-4 bg-[#1A1C23] text-white'>
+      <div
+        className={`flex justify-between items-center p-4 ${colors.navbar} ${colors.navbarText}`}
+      >
         <h1 className='text-2xl font-bold'>Simple Dashboard</h1>
       </div>
     );
@@ -104,10 +109,23 @@ const Navbar = () => {
 
   return (
     <div className='relative'>
-      <div className='flex justify-between items-center p-4 bg-[#1A1C23] text-white'>
+      <div
+        className={`flex justify-between items-center p-4 ${colors.navbar} ${colors.navbarText}`}
+      >
         <h1 className='text-xl sm:text-2xl font-bold'>Simple Dashboard</h1>
         <div className='flex items-center gap-2 sm:gap-4'>
-          <IoSunnyOutline className='text-xl cursor-pointer hover:text-yellow-400 transition-colors' />
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className={`text-xl cursor-pointer transition-colors ${colors.icon} ${colors.iconHover}`}
+            aria-label='Toggle theme'
+          >
+            {isDark ? (
+              <IoSunnyOutline className='text-yellow-400' />
+            ) : (
+              <IoMoonOutline className='text-gray-700' />
+            )}
+          </button>
 
           {/* Notification Button */}
           <div className='relative' ref={notificationRef}>
@@ -253,7 +271,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link href={'/Settings'} >
+                <Link href={'/Settings'}>
                   Settings
                   <span className='badge'>
                     <CiSettings className='text-xl' />

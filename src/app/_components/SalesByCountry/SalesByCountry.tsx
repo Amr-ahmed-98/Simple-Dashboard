@@ -2,6 +2,7 @@ import { EG, SA, AE, JO, LB, SY } from 'country-flag-icons/react/3x2';
 import CountUp from 'react-countup';
 import { useState, useEffect } from 'react';
 import { IoIosArrowUp } from 'react-icons/io';
+import { useTheme } from '@/context/ThemeContext';
 
 const countries = [
   {
@@ -56,6 +57,7 @@ const countries = [
 
 const SalesByCountry = () => {
   const [isClient, setIsClient] = useState(false);
+  const { colors } = useTheme();
 
   useEffect(() => {
     setIsClient(true);
@@ -63,13 +65,15 @@ const SalesByCountry = () => {
 
   return (
     <div className='w-full'>
-      <div className='card bg-base-100 shadow-xl w-full my-5 p-4 sm:p-6 md:p-8'>
-        <h3 className='text-xl sm:text-2xl font-bold mb-4'>Sales by Country</h3>
+      <div className={`${colors.card} shadow-xl w-full my-5 p-4 sm:p-6 md:p-8`}>
+        <h3 className={`text-xl sm:text-2xl font-bold mb-4 ${colors.textPrimary}`}>
+          Sales by Country
+        </h3>
         <div className='space-y-4'>
           {countries.map(({ name, Flag, sales, revenue, growth, color }) => (
             <div
               key={name}
-              className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 border-b last:border-b-0 pb-4 last:pb-0'
+              className={`flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 ${colors.border} last:border-b-0 pb-4 last:pb-0`}
             >
               <div className='flex items-center justify-center  sm:justify-start w-full sm:w-auto'>
                 <Flag title={name} className='h-10 w-10 sm:h-12 sm:w-12' />
@@ -84,19 +88,19 @@ const SalesByCountry = () => {
                   )}
                   K
                   <span
-                    className={`text-${color}-500 flex items-center text-sm ml-2`}
+                    className={`text-${color}-500 flex items-center text-sm ml-2 ${colors.textSecondary}`}
                   >
                     {' '}
                     <IoIosArrowUp /> {growth}%{' '}
                   </span>
                 </div>
-                <div className='text-gray-500 text-sm'>{name}</div>
+                <div className={`${colors.textSecondary} text-sm`}>{name}</div>
               </div>
               <div className='flex flex-col items-center sm:items-end min-w-[80px]'>
                 <span className='font-bold'>
                   {(sales / 1000).toLocaleString()}k
                 </span>
-                <span className='font-light text-xs text-gray-500'>Sales</span>
+                <span className='font-light text-xs ${colors.textSecondary}'>Sales</span>
               </div>
             </div>
           ))}

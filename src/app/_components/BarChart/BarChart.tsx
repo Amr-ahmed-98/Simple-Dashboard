@@ -1,10 +1,10 @@
-// src/components/BarChart.tsx
 'use client';
 
 import { Bar } from 'react-chartjs-2';
 import type { ChartData, ChartOptions } from 'chart.js';
 import '../../../lib/chart';
 import { useEffect, useState } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 interface BarChartProps {
   data: ChartData<'bar'>;
@@ -13,10 +13,11 @@ interface BarChartProps {
 
 export default function BarChart({ data, options = {} }: BarChartProps) {
   const [isClient, setIsClient] = useState(false);
+  const { colors } = useTheme();
   useEffect(() => setIsClient(true), []);
   if (!isClient) return null;
 
-  // merge in our "disable animations" defaults
+
   const mergedOptions: ChartOptions<'bar'> = {
     ...options,
     responsive: true,
@@ -32,7 +33,7 @@ export default function BarChart({ data, options = {} }: BarChartProps) {
   };
 
   return (
-    <div className='w-full h-64'>
+    <div className={`w-full h-64 ${colors.card} p-4`}>
       <Bar data={data} options={mergedOptions} />
     </div>
   );

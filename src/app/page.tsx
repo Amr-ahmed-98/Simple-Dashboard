@@ -3,7 +3,6 @@ import NewSalesCard from './_components/NewSalesCard/NewSalesCard';
 import TotalClientCard from './_components/TotalClientCard/TotalClientCard';
 import RecentTransactions from './_components/RecentTransactions/RecentTransactions';
 import ProductPerformance from './_components/ProductPerformance/ProductPerformance';
-import SalesByCountry from './_components/SalesByCountry/SalesByCountry';
 
 
 export default function Home() {

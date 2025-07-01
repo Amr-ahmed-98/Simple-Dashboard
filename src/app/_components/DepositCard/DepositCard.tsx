@@ -36,16 +36,21 @@ const deposits = [
   },
 ];
 
+import { useTheme } from '@/context/ThemeContext';
+
 const DepositCard = () => {
+  const { colors } = useTheme();
   return (
     <div className='w-full'>
-      <div className='card bg-base-100 shadow-xl w-full my-5 p-4 sm:p-6 md:p-8'>
-        <h3 className='text-xl sm:text-2xl font-bold mb-4'>Deposit</h3>
+      <div className={`${colors.card} shadow-xl w-full my-5 p-4 sm:p-6 md:p-8`}>
+        <h3 className={`text-xl sm:text-2xl font-bold mb-4 ${colors.textPrimary}`}>
+          Deposit
+        </h3>
         <div className='space-y-4'>
           {deposits.map((d) => (
             <div
               key={d.name}
-              className='group flex items-center justify-between bg-base-100 dark:bg-gray-800  hover:bg-gray-50 dark:hover:bg-gray-700 transition rounded-lg px-3 py-2 gap-2 shadow-sm border border-gray-100 dark:border-gray-700'
+              className={`group flex items-center justify-between ${colors.card} hover:${colors.cardHover} transition rounded-lg px-3 py-2 gap-2 shadow-sm ${colors.border}`}
             >
               <div className='flex items-center gap-3 min-w-[100px]'>
                 <img
@@ -54,10 +59,10 @@ const DepositCard = () => {
                   className='w-[30px] h-[30px] object-contain rounded'
                 />
                 <div>
-                  <p className='font-semibold text-white group-hover:text-black dark:text-gray-100 dark:group-hover:text-white text-sm sm:text-base m-0 leading-tight'>
+                  <p className={`font-semibold ${colors.textPrimary} group-hover:${colors.textSecondary} text-sm sm:text-base m-0 leading-tight`}>
                     {d.name}
                   </p>
-                  <span className='text-xs text-gray-500 dark:text-gray-400'>
+                  <span className={`text-xs ${colors.textSecondary}`}>
                     {d.desc}
                   </span>
                 </div>

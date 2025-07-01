@@ -1,16 +1,37 @@
 'use client';
+import { useTheme } from '@/context/ThemeContext';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+interface UserData {
+  users: Array<{
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    company: { title: string };
+  }>;
+}
 
-
+interface ProductData {
+  products: Array<{
+    id: number;
+    title: string;
+    price: number;
+    stock: number;
+    rating: number;
+    thumbnail: string;
+  }>;
+}
 
 interface CombinedItem {
-  user: User;
-  product: Product;
+  user: UserData['users'][number];
+  product: ProductData['products'][number];
 }
 
 const ProductPerformance = () => {
+  const { colors } = useTheme();
+
   const {
     data: userData,
     isLoading: loadingUser,
@@ -21,7 +42,7 @@ const ProductPerformance = () => {
       const response = await axios.get<UserData>(
         'https://dummyjson.com/users?limit=5'
       );
-      return response.data.users;
+      return response.data;
     },
   });
 
@@ -35,31 +56,27 @@ const ProductPerformance = () => {
       const response = await axios.get<ProductData>(
         'https://dummyjson.com/products?limit=5'
       );
-      return response.data.products;
+      return response.data;
     },
   });
-
 
   const combinedData: CombinedItem[] = [];
 
   if (userData && productData) {
-    // Match users with products (assuming we want to pair them by index)
-    const maxLength = Math.min(userData.length, productData.length);
+    const maxLength = Math.min(userData.users.length, productData.products.length);
     for (let i = 0; i < maxLength; i++) {
       combinedData.push({
-        user: userData[i],
-        product: productData[i],
+        user: userData.users[i],
+        product: productData.products[i],
       });
     }
   }
 
-  // Function to determine priority based on ratings
   const getPriority = (rating: number) => {
     if (rating > 3.5) return { text: 'High', color: 'red' };
     if (rating >= 2.5) return { text: 'Medium', color: 'yellow' };
     return { text: 'Low', color: 'green' };
   };
-
 
   const calculateBudget = (price: number, stock: number) => {
     return price * stock;
@@ -69,15 +86,16 @@ const ProductPerformance = () => {
   if (errorUser || errorProduct) return <div>Error loading data</div>;
 
   return (
-    <div className='card bg-base-100 shadow-xl p-6'>
-      <h2 className='text-2xl font-bold mb-6 '>Product Performance</h2>
+    <div className={`${colors.card} ${colors.cardHover} p-6`}>
+      <h2 className={`${colors.textPrimary} text-2xl font-bold mb-6`}>
+        Product Performance
+      </h2>
 
-      {/* Window view - Visble From Midium to Upper */}
       <div className='hidden md:block overflow-x-auto'>
-        <table className='table table-zebra w-full'>
+        <table className='w-full'>
           <thead>
-            <tr className='border-b'>
-              <th className='py-4'>Id</th>
+            <tr className={`hover ${colors.border} border-b`}>
+              <th className={`py-4 ${colors.textPrimary}`}>Id</th>
               <th className='py-4'>Assigned To</th>
               <th className='py-4'>Product Name</th>
               <th className='py-4'>Priority</th>
@@ -92,24 +110,47 @@ const ProductPerformance = () => {
                 item.product.stock
               );
               return (
-                <tr key={item.user.id} className='hover border-b'>
-                  <td className='py-4'>{item.user.id}</td>
+                <tr key={item.user.id} className={`hover ${colors.border} border-b`}>
+                  <td className={`py-4 ${colors.textPrimary}`}>
+                    {item.user.id}
+                  </td>
                   <td className='py-4'>
                     {item.user.firstName} {item.user.lastName}
                     <br />
-                    <span className='text-sm text-gray-500'>
+                    <span className={`${colors.textSecondary} text-sm`}>
                       {item.user.company.title}
                     </span>
                   </td>
-                  <td className='py-4'>{item.product.title}</td>
+                  <td className='py-4'>
+                    <div className='flex items-center gap-2'>
+                      <img
+                        src={item.product.thumbnail}
+                        alt={item.product.title}
+                        className='w-8 h-8 rounded'
+                      />
+                      <span className={`font-medium ${colors.textPrimary}`}>
+                        {item.product.title}
+                      </span>
+                    </div>
+                  </td>
                   <td className='py-4'>
                     <span
-                      className={`px-3 py-1 text-${priority.color}-600 font-medium bg-${priority.color}-100 rounded-full text-sm`}
+                      className={`px-2 py-1 rounded-full text-sm font-medium inline-flex items-center gap-2 ${
+                        priority.color === 'red'
+                          ? 'text-red-600 bg-red-100'
+                          : priority.color === 'yellow'
+                          ? 'text-yellow-600 bg-yellow-100'
+                          : 'text-green-600 bg-green-100'
+                      }`}
                     >
                       {priority.text}
                     </span>
                   </td>
-                  <td className='py-4'>${budget.toLocaleString()}</td>
+                  <td className='py-4'>
+                    <span className={`font-semibold ${colors.textPrimary}`}>
+                      ${budget.toLocaleString()}
+                    </span>
+                  </td>
                 </tr>
               );
             })}
@@ -128,10 +169,10 @@ const ProductPerformance = () => {
           return (
             <div
               key={item.user.id}
-              className='bg-white p-4 rounded-lg shadow-sm border border-gray-100'
+              className={`p-4 rounded-lg shadow-sm ${colors.border} border ${colors.cardHover}`}
             >
               <div className='flex justify-between items-center mb-2'>
-                <span className='font-medium'>ID: {item.user.id}</span>
+                <span className={`font-medium ${colors.textPrimary}`}>ID: {item.user.id}</span>
                 <span
                   className={`px-3 py-1 text-${priority.color}-600 font-medium bg-${priority.color}-100 rounded-full text-xs`}
                 >
@@ -140,23 +181,27 @@ const ProductPerformance = () => {
               </div>
 
               <div className='mb-2'>
-                <span className='text-gray-500 text-sm'>Assigned To:</span>
-                <div className='font-medium'>
+                <span className={`${colors.textSecondary} text-sm`}>Assigned To:</span>
+                <div className={`font-medium ${colors.textPrimary}`}>
                   {item.user.firstName} {item.user.lastName}
                 </div>
-                <div className='text-sm text-gray-500'>
+                <div className={`${colors.textSecondary} text-sm`}>
                   {item.user.company.title}
                 </div>
               </div>
 
               <div className='mb-2'>
-                <span className='text-gray-500 text-sm'>Product:</span>
-                <div className='font-medium'>{item.product.title}</div>
+                <span className={`${colors.textSecondary} text-sm`}>Product:</span>
+                <div className={`font-medium ${colors.textPrimary}`}>
+                  {item.product.title}
+                </div>
               </div>
 
               <div className='flex justify-between items-center'>
-                <span className='text-gray-500 text-sm'>Budget:</span>
-                <span className='font-medium'>${budget.toLocaleString()}</span>
+                <span className={`${colors.textSecondary} text-sm`}>Budget:</span>
+                <span className={`font-medium ${colors.textPrimary}`}>
+                  ${budget.toLocaleString()}
+                </span>
               </div>
             </div>
           );
