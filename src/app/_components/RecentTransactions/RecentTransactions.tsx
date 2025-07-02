@@ -4,28 +4,7 @@ import { useTheme } from '@/context/ThemeContext';
 const RecentTransactions = () => {
   const { colors } = useTheme();
 
-  const getStatusStyles = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'success':
-        return {
-          text: 'text-green-600',
-          bg: 'bg-green-100',
-          dot: 'bg-green-500',
-        };
-      case 'failed':
-        return {
-          text: 'text-red-600',
-          bg: 'bg-red-100',
-          dot: 'bg-red-500',
-        };
-      default:
-        return {
-          text: colors.textSecondary,
-          bg: colors.backgroundSecondary,
-          dot: colors.border,
-        };
-    }
-  };
+ 
 
   return (
     <div className={`${colors.card} ${colors.cardHover} p-6`}>

@@ -1,7 +1,6 @@
-
 const page = () => {
   return (
-    <div className='max-w-4xl mx-auto p-8'>
+    <div className='max-w-4xl mx-auto p-8 bg-white dark:bg-gray-900'>
       <form className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         {/* First Name */}
         <div>
@@ -10,7 +9,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='Amr'
             readOnly
           />
@@ -22,7 +21,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='Ahmed'
             readOnly
           />
@@ -34,7 +33,7 @@ const page = () => {
           </label>
           <input
             type='email'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='amrahmedwork@hotmail.com'
             readOnly
           />
@@ -46,7 +45,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='Freelancer'
             readOnly
           />
@@ -58,7 +57,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='+20 1156039815'
             readOnly
           />
@@ -70,7 +69,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='21 high dam street Nasr City, Ninth Area'
             readOnly
           />
@@ -82,7 +81,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='Nasr City'
             readOnly
           />
@@ -94,7 +93,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='Egypt'
             readOnly
           />
@@ -106,7 +105,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='Arabic , English'
             readOnly
           />
@@ -118,7 +117,7 @@ const page = () => {
           </label>
           <input
             type='text'
-            className='input input-bordered w-full'
+            className='input input-bordered w-full bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
             value='EGP'
             readOnly
           />

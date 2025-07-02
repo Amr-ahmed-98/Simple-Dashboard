@@ -61,13 +61,21 @@ const Navbar = () => {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'success':
-        return <BsCheckCircle className='text-green-400' />;
+        return (
+          <BsCheckCircle className='text-green-500 dark:text-green-300 drop-shadow' />
+        );
       case 'warning':
-        return <BsExclamationCircle className='text-yellow-400' />;
+        return (
+          <BsExclamationCircle className='text-yellow-500 dark:text-yellow-300 drop-shadow' />
+        );
       case 'info':
-        return <BsInfoCircle className='text-blue-400' />;
+        return (
+          <BsInfoCircle className='text-blue-500 dark:text-blue-300 drop-shadow' />
+        );
       default:
-        return <BsInfoCircle className='text-blue-400' />;
+        return (
+          <BsInfoCircle className='text-blue-500 dark:text-blue-300 drop-shadow' />
+        );
     }
   };
 
@@ -117,7 +125,7 @@ const Navbar = () => {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className={`text-xl cursor-pointer transition-colors ${colors.icon} ${colors.iconHover}`}
+            className={`text-xl cursor-pointer transition-colors ${colors.icon} ${colors.iconHover} hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full`}
             aria-label='Toggle theme'
           >
             {isDark ? (
@@ -130,7 +138,7 @@ const Navbar = () => {
           {/* Notification Button */}
           <div className='relative' ref={notificationRef}>
             <button
-              className='btn btn-ghost btn-circle hover:bg-gray-700 transition-all duration-200'
+              className='btn btn-ghost btn-circle hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 text-gray-500 dark:text-white hover:text-black'
               onClick={() => setShowNotifications(!showNotifications)}
             >
               <div className='indicator'>
@@ -178,7 +186,7 @@ const Navbar = () => {
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className={`p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer ${
+                        className={`p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer ${
                           !notification.read
                             ? 'bg-blue-50 dark:bg-blue-900/20'
                             : ''
@@ -234,7 +242,7 @@ const Navbar = () => {
                 {/* Footer */}
                 {notifications.length > 0 && (
                   <div className='p-3 border-t border-gray-200 dark:border-gray-700'>
-                    <button className='w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium py-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors'>
+                    <button className='w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'>
                       View All Notifications
                     </button>
                   </div>
@@ -248,7 +256,7 @@ const Navbar = () => {
             <div
               tabIndex={0}
               role='button'
-              className='btn btn-ghost btn-circle avatar hover:bg-gray-700'
+              className='btn btn-ghost btn-circle avatar hover:bg-gray-100 dark:hover:bg-gray-700'
             >
               <div className='w-8 sm:w-10 rounded-full'>
                 <img
@@ -260,10 +268,13 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className='menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow-lg'
+              className='menu menu-sm dropdown-content bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-box z-[1] mt-3 w-52 p-2 shadow-lg border border-gray-200 dark:border-gray-700'
             >
               <li>
-                <Link href={'/Profile'} className='justify-between '>
+                <Link
+                  href={'/Profile'}
+                  className='justify-between hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg'
+                >
                   Profile
                   <span className='badge'>
                     <IoPerson />
@@ -271,7 +282,10 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link href={'/Settings'}>
+                <Link
+                  href={'/Settings'}
+                  className='hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg'
+                >
                   Settings
                   <span className='badge'>
                     <CiSettings className='text-xl' />
